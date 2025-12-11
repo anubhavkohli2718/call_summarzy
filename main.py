@@ -29,13 +29,15 @@ logger = logging.getLogger(__name__)
 
 app = FastAPI(title="Audio Transcription API", version="1.0.0")
 
-# Enable CORS for all origins (adjust in production)
+# Enable CORS for all origins
+# In production, you may want to restrict this to specific domains
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["*"],  # Allows all origins - adjust for production if needed
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["*"],
+    expose_headers=["*"],
 )
 
 # Global variables to store the loaded models
