@@ -605,6 +605,19 @@ async def health_check():
         "model_loaded": whisper_model is not None
     }
 
+@app.options("/transcribe")
+async def transcribe_options():
+    """Handle CORS preflight requests"""
+    return JSONResponse(
+        content={},
+        headers={
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "POST, OPTIONS",
+            "Access-Control-Allow-Headers": "*",
+            "Access-Control-Max-Age": "3600",
+        }
+    )
+
 @app.post("/transcribe")
 async def transcribe_audio(
     file: UploadFile = File(...),
