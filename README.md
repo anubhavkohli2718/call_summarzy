@@ -7,8 +7,10 @@ A FastAPI-based backend service that transcribes audio files using OpenAI's Whis
 - 🎤 Audio transcription using self-hosted Whisper model
 - 🌍 Auto-detection of English and Spanish languages
 - 📝 Manual language specification (en/es)
+- 🎯 Speaker diarization (identifies different speakers)
 - 🚀 Ready for Railway deployment
 - 📊 Detailed transcription with timestamps and segments
+- 📋 JSON output with speaker labels for each segment
 
 ## Supported Audio Formats
 
@@ -45,18 +47,41 @@ POST /transcribe
   "transcription": "Full transcription text...",
   "language_detected": "en",
   "language_requested": "auto",
+  "transcription_with_speakers": [
+    {
+      "speaker": "Speaker 1",
+      "text": "Hello, how can I help you?",
+      "start": 0.0,
+      "end": 2.5
+    },
+    {
+      "speaker": "Speaker 2",
+      "text": "Hi, I need some assistance.",
+      "start": 3.0,
+      "end": 5.2
+    }
+  ],
   "segments": [
     {
       "id": 0,
+      "speaker": "Speaker 1",
       "start": 0.0,
+      "end": 2.5,
+      "text": "Hello, how can I help you?"
+    },
+    {
+      "id": 1,
+      "speaker": "Speaker 2",
+      "start": 3.0,
       "end": 5.2,
-      "text": "Segment text..."
+      "text": "Hi, I need some assistance."
     }
   ],
   "metadata": {
     "filename": "audio.mp3",
     "file_size": 123456,
-    "duration": 30.5
+    "duration": 30.5,
+    "speaker_diarization": true
   }
 }
 ```
@@ -140,7 +165,10 @@ print(response.json())
 
 3. **Set environment variables (if needed):**
    - Railway will automatically set the `PORT` environment variable
-   - No additional environment variables are required for basic operation
+   - For speaker diarization: Set `HF_TOKEN` with your Hugging Face token
+     - Get a token from [Hugging Face](https://huggingface.co/settings/tokens)
+     - Accept the terms for [pyannote/speaker-diarization-3.1](https://huggingface.co/pyannote/speaker-diarization-3.1)
+   - Note: Without `HF_TOKEN`, the API will use a fallback method to assign speakers
 
 4. **Deploy:**
    - If using GitHub, push your code and Railway will auto-deploy

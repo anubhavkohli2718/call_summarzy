@@ -1,0 +1,56 @@
+{
+  "success": true,
+  "transcription": "Thank you for calling. No group. This is Fania. How many help you? Hi, Tania. This is Anthony. I'm calling from added.",
+  "language_detected": "en",
+  "language_requested": "auto",
+  "transcription_with_speakers": [
+    {
+      "speaker": "Speaker 1",
+      "text": "Thank you for calling. No group. This is Fania. How many help you?",
+      "start": 0.0,
+      "end": 5.2
+    },
+    {
+      "speaker": "Speaker 2",
+      "text": "Hi, Tania. This is Anthony. I'm calling from added.",
+      "start": 6.0,
+      "end": 12.5
+    },
+    {
+      "speaker": "Speaker 1",
+      "text": "I was looking to speak for Gina.",
+      "start": 13.0,
+      "end": 16.8
+    }
+  ],
+  "segments": [
+    {
+      "id": 0,
+      "speaker": "Speaker 1",
+      "start": 0.0,
+      "end": 5.2,
+      "text": "Thank you for calling. No group. This is Fania. How many help you?"
+    },
+    {
+      "id": 1,
+      "speaker": "Speaker 2",
+      "start": 6.0,
+      "end": 12.5,
+      "text": "Hi, Tania. This is Anthony. I'm calling from added."
+    },
+    {
+      "id": 2,
+      "speaker": "Speaker 1",
+      "start": 13.0,
+      "end": 16.8,
+      "text": "I was looking to speak for Gina."
+    }
+  ],
+  "metadata": {
+    "filename": "test-audio.mp3",
+    "file_size": 824301,
+    "duration": 206.56,
+    "speaker_diarization": false
+  }
+}
+
