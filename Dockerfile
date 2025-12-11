@@ -25,5 +25,6 @@ EXPOSE 8000
 ENV PORT=8000
 
 # Run the application
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Railway sets PORT environment variable, but we need to read it in Python
+CMD python -c "import os; port = int(os.getenv('PORT', '8000')); import uvicorn; uvicorn.run('main:app', host='0.0.0.0', port=port)"
 
