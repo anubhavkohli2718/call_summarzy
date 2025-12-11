@@ -31,13 +31,36 @@ GET /health
 ```
 Returns the health status of the API and whether the model is loaded.
 
+**Response:**
+```json
+{
+  "status": "healthy",
+  "model_loaded": true
+}
+```
+
+### Root Endpoint
+```
+GET /
+```
+Returns basic API information.
+
+**Response:**
+```json
+{
+  "message": "Audio Transcription API",
+  "status": "running",
+  "supported_languages": ["en", "es"]
+}
+```
+
 ### Transcribe Audio
 ```
 POST /transcribe
 ```
 
 **Parameters:**
-- `file` (multipart/form-data): Audio file to transcribe
+- `file` (multipart/form-data, required): Audio file to transcribe
 - `language` (optional query parameter): Language code - `en` for English, `es` for Spanish. If omitted, language will be auto-detected.
 
 **Response:**
@@ -45,46 +68,84 @@ POST /transcribe
 {
   "success": true,
   "transcription": "Full transcription text...",
+  "summary": "Call participants: Anthony, Fania. Topics discussed: order, shipment, payment. Key decisions: process order, ship in 3-4 days.",
+  "action_items": [
+    {
+      "assignee": "Anthony",
+      "description": "process that from here",
+      "speaker": "Anthony",
+      "timestamp": 166.6,
+      "date": "three to four days",
+      "time": null
+    },
+    {
+      "assignee": "Fania",
+      "description": "call you to set those up",
+      "speaker": "Fania",
+      "timestamp": 189.6,
+      "date": null,
+      "time": null
+    }
+  ],
   "language_detected": "en",
   "language_requested": "auto",
   "transcription_with_speakers": [
     {
-      "speaker": "Speaker 1",
-      "text": "Hello, how can I help you?",
+      "speaker": "Fania",
+      "text": "Thank you for calling.",
       "start": 0.0,
-      "end": 2.5
+      "end": 2.16
     },
     {
-      "speaker": "Speaker 2",
-      "text": "Hi, I need some assistance.",
-      "start": 3.0,
-      "end": 5.2
+      "speaker": "Anthony",
+      "text": "Hi, this is Anthony.",
+      "start": 6.0,
+      "end": 8.5
     }
   ],
   "segments": [
     {
       "id": 0,
-      "speaker": "Speaker 1",
+      "speaker": "Fania",
       "start": 0.0,
-      "end": 2.5,
-      "text": "Hello, how can I help you?"
+      "end": 2.16,
+      "text": "Thank you for calling."
     },
     {
       "id": 1,
-      "speaker": "Speaker 2",
-      "start": 3.0,
-      "end": 5.2,
-      "text": "Hi, I need some assistance."
+      "speaker": "Anthony",
+      "start": 6.0,
+      "end": 8.5,
+      "text": "Hi, this is Anthony."
     }
   ],
   "metadata": {
     "filename": "audio.mp3",
     "file_size": 123456,
-    "duration": 30.5,
-    "speaker_diarization": true
+    "duration": 206.56,
+    "speaker_diarization": false,
+    "total_speakers": 2,
+    "total_action_items": 5
   }
 }
 ```
+
+**Response Fields:**
+- `success`: Boolean indicating if transcription was successful
+- `transcription`: Full transcription text without speaker labels
+- `summary`: AI-generated summary of the call including participants, topics, and key decisions
+- `action_items`: Array of action items extracted from the call with:
+  - `assignee`: Person responsible for the action (extracted name or "Speaker X")
+  - `description`: Description of the action item
+  - `speaker`: Speaker who mentioned the action
+  - `timestamp`: Time in seconds when action was mentioned
+  - `date`: Date mentioned (if any, e.g., "three to four days", "end of this month")
+  - `time`: Time mentioned (if any, e.g., "2:00 PM")
+- `language_detected`: Language detected by Whisper
+- `language_requested`: Language requested or "auto"
+- `transcription_with_speakers`: Simplified array with speaker labels
+- `segments`: Detailed segments with IDs and timestamps
+- `metadata`: Additional metadata about the call
 
 ## Local Development
 
