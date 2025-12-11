@@ -4,7 +4,7 @@
 
 ### Base URL
 - **Local:** `http://localhost:8000`
-- **Production:** Your Railway deployment URL
+- **Production:** `https://web-production-4f6b5.up.railway.app`
 
 ---
 

@@ -3,7 +3,7 @@
 ## Base URL
 ```
 http://localhost:8000  (local)
-https://your-railway-app.railway.app  (production)
+https://web-production-4f6b5.up.railway.app  (production)
 ```
 
 ## Endpoints
