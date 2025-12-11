@@ -51,9 +51,12 @@ def load_whisper_model():
     global whisper_model
     if whisper_model is None:
         logger.info("Loading Whisper model...")
-        # Using base model - you can change to 'small', 'medium', 'large', etc.
-        # base is a good balance between speed and accuracy
-        whisper_model = whisper.load_model("base")
+        # Using 'tiny' model for faster production performance on Railway
+        # Railway free tier has limited CPU, so smaller model = faster response
+        # Options: 'tiny' (fastest), 'base' (balanced), 'small' (better accuracy)
+        model_size = os.getenv("WHISPER_MODEL", "tiny")  # Default to 'tiny' for speed
+        whisper_model = whisper.load_model(model_size)
+        logger.info(f"Whisper model '{model_size}' loaded successfully")
         logger.info("Whisper model loaded successfully")
     return whisper_model
 
@@ -678,8 +681,17 @@ async def transcribe_audio(
                 # Auto-detect language (Whisper will detect automatically)
                 transcribe_options["language"] = None
             
-            # Perform transcription
-            result = whisper_model.transcribe(temp_file_path, **transcribe_options)
+            # Perform transcription with error handling
+            logger.info(f"Starting transcription with model: {os.getenv('WHISPER_MODEL', 'tiny')}")
+            try:
+                result = whisper_model.transcribe(temp_file_path, **transcribe_options)
+                logger.info("Transcription completed successfully")
+            except Exception as transcribe_error:
+                logger.error(f"Transcription error: {str(transcribe_error)}", exc_info=True)
+                raise HTTPException(
+                    status_code=500, 
+                    detail=f"Transcription failed: {str(transcribe_error)}"
+                )
             
             # Extract results
             detected_language = result.get("language", "unknown")
@@ -803,5 +815,12 @@ async def transcribe_audio(
 if __name__ == "__main__":
     import uvicorn
     port = int(os.getenv("PORT", 8000))
-    uvicorn.run(app, host="0.0.0.0", port=port)
+    # Configure uvicorn with longer timeouts for transcription processing
+    uvicorn.run(
+        app, 
+        host="0.0.0.0", 
+        port=port,
+        timeout_keep_alive=600,  # Keep connections alive for 10 minutes
+        timeout_graceful_shutdown=30
+    )
 
