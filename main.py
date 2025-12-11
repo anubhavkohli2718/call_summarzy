@@ -35,9 +35,10 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # Allows all origins - adjust for production if needed
     allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD"],
     allow_headers=["*"],
     expose_headers=["*"],
+    max_age=3600,  # Cache preflight requests for 1 hour
 )
 
 # Global variables to store the loaded models
