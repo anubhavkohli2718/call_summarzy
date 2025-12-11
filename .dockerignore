@@ -21,4 +21,9 @@ coverage.xml
 .pytest_cache
 .hypothesis
 .DS_Store
-
+*.mp3
+*.wav
+*.m4a
+server.log
+test-audio.mp3
+transcription_result.json
